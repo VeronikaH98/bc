@@ -172,17 +172,29 @@ class IndexCalculator:
             parent=self.iface.mainWindow())
 
         self.dlg.tb_input.clicked.connect(self.openRaster)
-
+        self.dlg.tb_output.clicked.connect(self.saveRaster)
 
     def openRaster(self):
         """Open raster from file dialog"""
         inFile = str(QFileDialog.getOpenFileName(caption= "Open raster",
                                                  filter = "GeoTiff (*.tif)")[0])
-        if inFile is not None:
-            self.iface.addRasterLayer(inFile, str.split(os.path.basename(inFile), ".")[0])
-            self.loadRasters()
+        self.setRasterInputLine(inFile)
+       # if inFile is not None:
+        #    self.iface.addRasterLayer(inFile, str.split(os.path.basename(inFile), ".")[0])
 
+    def setRasterInputLine(self, text):
+        """Set the GUI text for the input raster"""
+        self.dlg.le_input.setText(text)
+            
+    def saveRaster(self):
+        """Get the save file name for the output"""
+        outFile = str(QFileDialog.getSaveFileName(caption="Save raster as",
+                                                  filter="GeoTiff (*.tif)")[0])
+        self.setRasterLine(outFile)
 
+    def setRasterLine(self, text):
+        """Set the GUI text for the output raster"""
+        self.dlg.le_output.setText(text)
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -191,8 +203,7 @@ class IndexCalculator:
                 self.tr(u'&Index Calculator'),
                 action)
             self.iface.removeToolBarIcon(action)
-
-
+ 
     def run(self):
         """Run method that performs all the real work"""
         # show the dialog
