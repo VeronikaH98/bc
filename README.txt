@@ -4,7 +4,7 @@ Your plugin IndexCalculator was created in:
     C:/bc/qgis\index_calculator
 
 Your QGIS plugin directory is located at:
-    C:/Users/Weva/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
+    C:/Users/vhajd/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
 
 What's Next:
 

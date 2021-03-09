@@ -3,9 +3,9 @@
 #
 # This plugin calculates different indexes from Sentinel 2 snapshots.
 #							 -------------------
-#		begin				: 2020-11-23
+#		begin				: 2021-03-07
 #		git sha				: $Format:%H$
-#		copyright			: (C) 2020 by Veronika Hajdúchová
+#		copyright			: (C) 2021 by Veronika Hajdúchová
 #		email				: hajduchova18@uniba.sk
 # ***************************************************************************/
 #
@@ -65,7 +65,7 @@ PEP8EXCLUDE=pydev,resources.py,conf.py,third_party,ui
 #	* Windows:
 #	  AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins'
 
-QGISDIR=C:\Users\Weva\AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
+QGISDIR=C:\Users\vhajd\AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
 
 #################################################
 # Normally you would not need to edit below here
