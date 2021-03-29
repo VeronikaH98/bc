@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>505</width>
-    <height>309</height>
+    <width>479</width>
+    <height>368</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>260</y>
+     <x>120</x>
+     <y>320</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -29,11 +29,11 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QComboBox" name="cmb_red">
+  <widget class="QComboBox" name="cmb_blue">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>200</y>
+     <x>124</x>
+     <y>192</y>
      <width>73</width>
      <height>22</height>
     </rect>
@@ -42,18 +42,18 @@
   <widget class="QComboBox" name="cmb_green">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>230</y>
+     <x>124</x>
+     <y>221</y>
      <width>73</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cmb_blue">
+  <widget class="QComboBox" name="cmb_red">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>270</y>
+     <x>124</x>
+     <y>250</y>
      <width>73</width>
      <height>22</height>
     </rect>
@@ -131,30 +131,7 @@
     <string>...</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="cmb_nir">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>200</y>
-     <width>73</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>200</y>
-     <width>55</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>NIR</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -236,38 +213,119 @@
     </item>
    </layout>
   </widget>
+  <widget class="QComboBox" name="cmb_vnir">
+   <property name="geometry">
+    <rect>
+     <x>124</x>
+     <y>279</y>
+     <width>73</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>39</x>
-     <y>200</y>
-     <width>51</width>
-     <height>91</height>
+     <x>243</x>
+     <y>191</y>
+     <width>190</width>
+     <height>111</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLabel" name="label">
+   <layout class="QFormLayout" name="formLayout_2">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>RED</string>
+       <string>NIR (B8)</string>
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QLabel" name="label_2">
+    <item row="0" column="1">
+     <widget class="QComboBox" name="cmb_nir"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_8">
       <property name="text">
-       <string>GREEN</string>
+       <string>Water Vapour (B9)</string>
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QLabel" name="label_3">
+    <item row="1" column="1">
+     <widget class="QComboBox" name="cmb_b9"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_9">
       <property name="text">
-       <string>BLUE</string>
+       <string>SWIR (B11)</string>
       </property>
      </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QComboBox" name="cmb_b11"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>SWIR (B12)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="cmb_b12"/>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>55</x>
+     <y>279</y>
+     <width>56</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>VNIR (B5)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>55</x>
+     <y>192</y>
+     <width>52</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Blue (B2)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>55</x>
+     <y>221</y>
+     <width>62</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Green (B3)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>55</x>
+     <y>250</y>
+     <width>50</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Red (B4)</string>
+   </property>
   </widget>
  </widget>
  <resources/>

@@ -21,17 +21,30 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QFileDialog
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar
 from qgis.core import *
+from qgis.core import QgsProject, Qgis, QgsRasterLayer
+import processing,tempfile
+from qgis.utils import iface
 from osgeo import gdal
+from gdal_calc import Calc
+import os
+from qgis.analysis import QgsRasterCalculatorEntry, QgsRasterCalculator
+from qgis.core import QgsRasterLayer
+from qgis.core import QgsProject
+from qgis.analysis import QgsRasterCalculatorEntry, QgsRasterCalculator
+
+from qgis.analysis import QgsRasterCalculator, QgsRasterCalculatorEntry
+
 
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
 from .index_calculator_dialog import IndexCalculatorDialog
 import os.path
+import time
 
 
 class IndexCalculator:
@@ -69,7 +82,12 @@ class IndexCalculator:
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
-        self.first_start = None
+  ##      #self.first_start = None
+        self.toolbar = self.iface.addToolBar(u'indices')
+        self.toolbar.setObjectName(u'indices')
+
+
+
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -137,6 +155,9 @@ class IndexCalculator:
         :rtype: QAction
         """
 
+        self.dlg = IndexCalculatorDialog()
+
+
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -173,64 +194,333 @@ class IndexCalculator:
 
         # will be set False in run()
         self.first_start = True
-        self.dlg.tb_input.clicked.connect(self.inputRaster)
-        self.dlg.tb_output.clicked.connect(self.saveRaster)
-        self.loadRastersred()
-        self.loadRastersgreen()
-        self.loadRastersblue()
-        self.loadRastersnir()
+        
+    def update_rasters_boxes(self):
 
-    def inputRaster(self):
-        inFile = str(QFileDialog.getOpenFileName(caption="Open raster",
-                                                 filter="GeoTiff (*.tif)")[0])
-        self.setRasterInputLine(inFile)
+        self.clear_boxes(
+                self.dlg.cmb_blue,
+                self.dlg.cmb_green,
+                self.dlg.cmb_red,
+                self.dlg.cmb_vnir,
+                self.dlg.cmb_nir,
+                self.dlg.cmb_b9,
+                self.dlg.cmb_b11,
+                self.dlg.cmb_b12
+            )
 
-    def setRasterInputLine(self, text):
-        self.dlg.le_input.setText(text)
+        layers = list()
+        layers.append("Not Set")
+        layers = layers + [lay.name() for lay in self.iface.mapCanvas().layers()]
 
+        self.add_layers_to_raster_boxes(
+            layers,
+            self.dlg.cmb_blue,
+            self.dlg.cmb_green,
+            self.dlg.cmb_red,
+            self.dlg.cmb_vnir,
+            self.dlg.cmb_nir,
+            self.dlg.cmb_b9,
+            self.dlg.cmb_b11,
+            self.dlg.cmb_b12
+        )
+
+    def add_layers_to_raster_boxes(self, layers, *boxes):
+        for box in boxes:
+            box.addItems(layers)
+
+    def clear_boxes(self, *boxes):
+        for box in boxes:
+            box.clear()
+
+    # method for selecting the resulting raster file
     def saveRaster(self):
-        outFile = str(QFileDialog.getSaveFileName(caption = "Save raster as",
-                                                  filter="GeoTiff (*.tif)")[0])
-        self.setRasterOutputLine(outFile)
+        filename = QFileDialog.getSaveFileName(
+            self.dlg, "Save raster as ", "", '*.tif'
+        )
+        self.dlg.le_output.setText(filename[0])
 
-    def setRasterOutputLine(self, text):
-        self.dlg.le_output.setText(text)
 
-    def loadRastersred(self):
-        self.dlg.cmb_red.clear()
+    def blue(self):
         layers = [layer for layer in QgsProject.instance().mapLayers().values()]
         raster_layers = []
         for layer in layers:
-            if layer.type() ==QgsMapLayer.RasterLayer:
-                raster_layers.append(layer.name())
-        self.dlg.cmb_red.addItems(raster_layers)
-
-    def loadRastersgreen(self):
-        self.dlg.cmb_green.clear()
-        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
-        raster_layers = []
-        for layer in layers:
-            if layer.type() ==QgsMapLayer.RasterLayer:
-                raster_layers.append(layer.name())
-        self.dlg.cmb_green.addItems(raster_layers)
-
-    def loadRastersblue(self):
-        self.dlg.cmb_blue.clear()
-        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
-        raster_layers = []
-        for layer in layers:
-            if layer.type() ==QgsMapLayer.RasterLayer:
+            if layer.type() == QgsMapLayer.RasterLayer:
                 raster_layers.append(layer.name())
         self.dlg.cmb_blue.addItems(raster_layers)
 
-    def loadRastersnir(self):
-        self.dlg.cmb_nir.clear()
+    def green(self):
         layers = [layer for layer in QgsProject.instance().mapLayers().values()]
         raster_layers = []
         for layer in layers:
-            if layer.type() ==QgsMapLayer.RasterLayer:
+            if layer.type() == QgsMapLayer.RasterLayer:
+                raster_layers.append(layer.name())
+        self.dlg.cmb_green.addItems(raster_layers)
+
+    def red(self):
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        raster_layers = []
+        for layer in layers:
+            if layer.type() == QgsMapLayer.RasterLayer:
+                raster_layers.append(layer.name())
+        self.dlg.cmb_red.addItems(raster_layers)
+
+    def vnir(self):
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        raster_layers = []
+        for layer in layers:
+            if layer.type() == QgsMapLayer.RasterLayer:
+                raster_layers.append(layer.name())
+        self.dlg.cmb_vnir.addItems(raster_layers)
+
+    def nir(self):
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        raster_layers = []
+        for layer in layers:
+            if layer.type() == QgsMapLayer.RasterLayer:
                 raster_layers.append(layer.name())
         self.dlg.cmb_nir.addItems(raster_layers)
+
+    def b9(self):
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        raster_layers = []
+        for layer in layers:
+            if layer.type() == QgsMapLayer.RasterLayer:
+                raster_layers.append(layer.name())
+        self.dlg.cmb_b9.addItems(raster_layers)
+  
+    def b11(self):
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        raster_layers = []
+        for layer in layers:
+            if layer.type() == QgsMapLayer.RasterLayer:
+                raster_layers.append(layer.name())
+        self.dlg.cmb_b11.addItems(raster_layers)
+
+    def b12(self):
+        layers = [layer for layer in QgsProject.instance().mapLayers().values()]
+        raster_layers = []
+        for layer in layers:
+            if layer.type() == QgsMapLayer.RasterLayer:
+                raster_layers.append(layer.name())
+        self.dlg.cmb_b12.addItems(raster_layers)
+
+
+    def getBlue(self):
+        layer = None
+        layername = self.dlg.cmb_blue.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+    def getGreen(self):
+        layer = None
+        layername = self.dlg.cmb_green.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+    def getRed(self):
+        layer = None
+        layername = self.dlg.cmb_red.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+    def getVNir(self):
+        layer = None
+        layername = self.dlg.cmb_vnir.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+    
+    def getNir(self):
+        layer = None
+        layername = self.dlg.cmb_nir.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+    def getB9(self):
+        layer = None
+        layername = self.dlg.cmb_b9.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+    def getB11(self):
+        layer = None
+        layername = self.dlg.cmb_b11.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+    def getB12(self):
+        layer = None
+        layername = self.dlg.cmb_b12.currentText()
+        for lyr in QgsProject.instance().mapLayers().values():
+            if lyr.name() == layername:
+                layer = lyr
+                break
+        return layer
+
+
+    def final(self):
+        if self.dlg.cb_ARVI.isChecked():
+            self.calc_arvi()
+        elif self.dlg.cb_BRI.isChecked():
+            self.calc_bri()
+        elif self.dlg.cb_CVI.isChecked():
+            self.calc_cvi()
+        elif self.dlg.cb_DVI.isChecked():
+            self.calc_dvi()
+        elif self.dlg.cb_GEMI.isChecked():
+            self.calc_gemi()
+        elif self.dlg.cb_GVMI.isChecked():
+            self.calc_gvmi()
+        elif self.dlg.cb_NDSI.isChecked():
+            self.calc_ndsi()
+        elif self.dlg.cb_NDVI.isChecked():
+            self.calc_ndvi()
+        elif self.dlg.cb_RVI.isChecked():
+            self.calc_rvi()
+        elif self.dlg.cb_SAVI.isChecked():
+            self.calc_savi()
+############################################################################
+
+    def calc_cvi(self):
+        lyr1 = self.getRed()
+        lyr2 = self.getNir()
+        lyr3 = self.getGreen()
+        output = self.dlg.le_output.text()
+
+        entries = []
+        #red band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'red'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #nir band
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'nir'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        #green band
+        ras3 = QgsRasterCalculatorEntry()
+        ras3.ref = 'green'
+        ras3.raster = lyr3
+        ras3.bandNumber = 1
+        entries.append( ras2 )
+
+        calc = QgsRasterCalculator( '"nir" * ("red" / ("green" * "green"))', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+
+    def calc_dvi(self):
+        lyr1 = self.getVNir()
+        lyr2 = self.getB9()
+        output = self.dlg.le_output.text()
+
+        entries = []
+        #vnir band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'vnir'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #b9 band
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'b9'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        calc = QgsRasterCalculator( '"b9" / "vnir"', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+
+
+
+    def calc_ndsi(self):
+        lyr1 = self.getB11()
+        lyr2 = self.getB12()
+        output = self.dlg.le_output.text()
+
+        entries = []
+        #b11 band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'b11'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #b12 band#
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'b12'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        calc = QgsRasterCalculator( '("b11" -  "b12") / ("b11" + "b12")', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation() 
+        
+    def calc_ndvi(self):
+        lyr1 = self.getRed()
+        lyr2 = self.getNir()
+        output = self.dlg.le_output.text()
+
+        entries = []
+        #red band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'red'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #nir band
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'nir'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        calc = QgsRasterCalculator( '("nir" -  "red") / ("nir" + "red")', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+
+    def calc_rvi(self):
+        lyr1 = self.getRed()
+        lyr2 = self.getNir()
+        output = self.dlg.le_output.text()
+
+        entries = []
+        #red band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'red'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #nir band
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'nir'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        calc = QgsRasterCalculator( '"nir" / "red"', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+
 
 
     def unload(self):
@@ -240,13 +530,17 @@ class IndexCalculator:
                 self.tr(u'&Index Calculator'),
                 action)
             self.iface.removeToolBarIcon(action)
-
+        del self.toolbar
 
     def run(self):
         """Run method that performs all the real work"""
 
         # Create the dialog with elements (after translation) and keep reference
+        self.update_rasters_boxes()
         
+        self.dlg.le_output.clear()
+
+        self.dlg.tb_output.clicked.connect(self.saveRaster)
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
@@ -255,4 +549,8 @@ class IndexCalculator:
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            pass
+            self.final()   
+                        
+           
+            self.iface.messageBar().pushMessage("Output Created Successfully", level=Qgis.Success, duration=3)            
+            self.dlg.tb_output.clicked.disconnect(self.saveRaster)
