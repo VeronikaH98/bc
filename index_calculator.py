@@ -25,6 +25,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QFileDialog, QProgressBar
 from qgis.core import *
+from qgis.gui import QgsDoubleSpinBox
 from qgis.core import QgsProject, Qgis, QgsRasterLayer
 import processing,tempfile
 from qgis.utils import iface
@@ -234,10 +235,10 @@ class IndexCalculator:
 
     # method for selecting the resulting raster file
     def saveRaster(self):
-        filename = QFileDialog.getSaveFileName(
-            self.dlg, "Save raster as ", "", '*.tif'
+        filename = QFileDialog.getExistingDirectory(
+            self.dlg, "Select folder"
         )
-        self.dlg.le_output.setText(filename[0])
+        self.dlg.le_output.setText(filename)
 
 
     def blue(self):
@@ -381,31 +382,91 @@ class IndexCalculator:
     def final(self):
         if self.dlg.cb_ARVI.isChecked():
             self.calc_arvi()
-        elif self.dlg.cb_BRI.isChecked():
+        if self.dlg.cb_BRI.isChecked():
             self.calc_bri()
-        elif self.dlg.cb_CVI.isChecked():
+        if self.dlg.cb_CVI.isChecked():
             self.calc_cvi()
-        elif self.dlg.cb_DVI.isChecked():
+        if self.dlg.cb_DVI.isChecked():
             self.calc_dvi()
-        elif self.dlg.cb_GEMI.isChecked():
+        if self.dlg.cb_GEMI.isChecked():
             self.calc_gemi()
-        elif self.dlg.cb_GVMI.isChecked():
+        if self.dlg.cb_GVMI.isChecked():
             self.calc_gvmi()
-        elif self.dlg.cb_NDSI.isChecked():
+        if self.dlg.cb_NDSI.isChecked():
             self.calc_ndsi()
-        elif self.dlg.cb_NDVI.isChecked():
+        if self.dlg.cb_NDVI.isChecked():
             self.calc_ndvi()
-        elif self.dlg.cb_RVI.isChecked():
+        if self.dlg.cb_RVI.isChecked():
             self.calc_rvi()
-        elif self.dlg.cb_SAVI.isChecked():
+        if self.dlg.cb_SAVI.isChecked():
             self.calc_savi()
 ############################################################################
+
+    def calc_arvi(self):
+        lyr1 = self.getRed()
+        lyr2 = self.getBlue()
+        lyr3 = self.getNir()
+        output = os.path.join(self.dlg.le_output.text(),"arvi.tif")
+
+        entries = []
+        #red band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'red'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #blueband
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'blue'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        #nir
+        ras3 = QgsRasterCalculatorEntry()
+        ras3.ref = 'nir'
+        ras3.raster = lyr3
+        ras3.bandNumber = 1
+        entries.append( ras3 )
+        calc = QgsRasterCalculator( '("nir" - (2 * "red") + "blue") / ("nir" + (2 * "red") + "blue")', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+        self.iface.messageBar().pushMessage("ARVI Output Created Successfully", level=Qgis.Success, duration=3)
+
+    def calc_bri(self):
+        lyr1 = self.getVNir()
+        lyr2 = self.getGreen()
+        lyr3 = self.getNir()
+        output = os.path.join(self.dlg.le_output.text(),"bri.tif")
+
+        entries = []
+        #vnir band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'vnir'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #green band
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'green'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        #nir
+        ras3 = QgsRasterCalculatorEntry()
+        ras3.ref = 'nir'
+        ras3.raster = lyr3
+        ras3.bandNumber = 1
+        entries.append( ras3 )
+        calc = QgsRasterCalculator( '(1.0 / "vnir" - 1.0 / "green") / "nir"', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+        self.iface.messageBar().pushMessage("BRI Output Created Successfully", level=Qgis.Success, duration=3)
 
     def calc_cvi(self):
         lyr1 = self.getRed()
         lyr2 = self.getNir()
         lyr3 = self.getGreen()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"cvi.tif")
 
         entries = []
         #red band
@@ -435,7 +496,7 @@ class IndexCalculator:
     def calc_dvi(self):
         lyr1 = self.getVNir()
         lyr2 = self.getB9()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"dvi.tif")
 
         entries = []
         #vnir band
@@ -455,40 +516,10 @@ class IndexCalculator:
         calc.processCalculation()
         self.iface.messageBar().pushMessage("DVI Output Created Successfully", level=Qgis.Success, duration=3)
 
-    def calc_bri(self):
-        lyr1 = self.getVNir()
-        lyr2 = self.getGreen()
-        lyr3 = self.getNir()
-        output = self.dlg.le_output.text()
-
-        entries = []
-        #vnir band
-        ras1 = QgsRasterCalculatorEntry()
-        ras1.ref = 'vnir'
-        ras1.raster = lyr1
-        ras1.bandNumber = 1
-        entries.append(ras1)
-        #green band
-        ras2 = QgsRasterCalculatorEntry()
-        ras2.ref = 'green'
-        ras2.raster = lyr2
-        ras2.bandNumber = 1
-        entries.append( ras2 )
-        #nir
-        ras3 = QgsRasterCalculatorEntry()
-        ras3.ref = 'nir'
-        ras3.raster = lyr3
-        ras3.bandNumber = 1
-        entries.append( ras3 )
-        calc = QgsRasterCalculator( '(1.0 / "vnir" - 1.0 / "green") / "nir"', \
-        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
-        calc.processCalculation()
-        self.iface.messageBar().pushMessage("BRI Output Created Successfully", level=Qgis.Success, duration=3)
-
     def calc_gvmi(self):
         lyr1 = self.getNir()
         lyr2 = self.getB12()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"gvmi.tif")
 
         entries = []
         #nir band
@@ -508,11 +539,10 @@ class IndexCalculator:
         calc.processCalculation()
         self.iface.messageBar().pushMessage("GVMI Output Created Successfully", level=Qgis.Success, duration=3)  
 
-
     def calc_gemi(self):
         lyr1 = self.getRed()
         lyr2 = self.getNir()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"gemi.tif")
 
         entries = []
         #red band
@@ -535,7 +565,7 @@ class IndexCalculator:
     def calc_ndsi(self):
         lyr1 = self.getB11()
         lyr2 = self.getB12()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"ndsi.tif")
 
         entries = []
         #b11 band
@@ -558,7 +588,7 @@ class IndexCalculator:
     def calc_ndvi(self):
         lyr1 = self.getRed()
         lyr2 = self.getNir()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"ndvi.tif")
 
         entries = []
         #red band
@@ -581,7 +611,7 @@ class IndexCalculator:
     def calc_rvi(self):
         lyr1 = self.getRed()
         lyr2 = self.getNir()
-        output = self.dlg.le_output.text()
+        output = os.path.join(self.dlg.le_output.text(),"rvi.tif")
 
         entries = []
         #red band
@@ -601,7 +631,28 @@ class IndexCalculator:
         calc.processCalculation()
         self.iface.messageBar().pushMessage("RVI Output Created Successfully", level=Qgis.Success, duration=3)
 
+    def calc_savi(self):
+        lyr1 = self.getRed()
+        lyr2 = self.getNir()
+        output = os.path.join(self.dlg.le_output.text(),"savi.tif")
 
+        entries = []
+        #red band
+        ras1 = QgsRasterCalculatorEntry()
+        ras1.ref = 'red'
+        ras1.raster = lyr1
+        ras1.bandNumber = 1
+        entries.append(ras1)
+        #nir band
+        ras2 = QgsRasterCalculatorEntry()
+        ras2.ref = 'nir'
+        ras2.raster = lyr2
+        ras2.bandNumber = 1
+        entries.append( ras2 )
+        calc = QgsRasterCalculator( '(("nir" - "red") / ("nir" + "red" + 0.5)) * (1 + 0.5)', \
+        output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
+        calc.processCalculation()
+        self.iface.messageBar().pushMessage("SAVI Output Created Successfully", level=Qgis.Success, duration=3)
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
