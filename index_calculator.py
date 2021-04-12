@@ -29,8 +29,6 @@ from qgis.gui import QgsDoubleSpinBox
 from qgis.core import QgsProject, Qgis, QgsRasterLayer
 import processing,tempfile
 from qgis.utils import iface
-from osgeo import gdal
-from gdal_calc import Calc
 import os
 from qgis.analysis import QgsRasterCalculatorEntry, QgsRasterCalculator
 from qgis.core import QgsRasterLayer
