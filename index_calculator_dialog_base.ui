@@ -34,7 +34,7 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>100</x>
      <y>330</y>
      <width>341</width>
      <height>32</height>
@@ -50,8 +50,8 @@
   <widget class="QComboBox" name="cmb_blue">
    <property name="geometry">
     <rect>
-     <x>129</x>
-     <y>122</y>
+     <x>109</x>
+     <y>102</y>
      <width>73</width>
      <height>22</height>
     </rect>
@@ -60,8 +60,8 @@
   <widget class="QComboBox" name="cmb_green">
    <property name="geometry">
     <rect>
-     <x>129</x>
-     <y>151</y>
+     <x>109</x>
+     <y>131</y>
      <width>73</width>
      <height>21</height>
     </rect>
@@ -70,8 +70,8 @@
   <widget class="QComboBox" name="cmb_red">
    <property name="geometry">
     <rect>
-     <x>129</x>
-     <y>180</y>
+     <x>109</x>
+     <y>160</y>
      <width>73</width>
      <height>22</height>
     </rect>
@@ -80,8 +80,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>270</y>
+     <x>40</x>
+     <y>240</y>
      <width>55</width>
      <height>16</height>
     </rect>
@@ -93,8 +93,8 @@
   <widget class="QLineEdit" name="le_output">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>270</y>
+     <x>90</x>
+     <y>240</y>
      <width>311</width>
      <height>22</height>
     </rect>
@@ -103,8 +103,8 @@
   <widget class="QToolButton" name="tb_output">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>270</y>
+     <x>410</x>
+     <y>240</y>
      <width>27</width>
      <height>22</height>
     </rect>
@@ -116,20 +116,13 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>20</x>
      <y>20</y>
      <width>431</width>
      <height>61</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QCheckBox" name="cb_ARVI">
-      <property name="text">
-       <string>ARVI</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QCheckBox" name="cb_BRI">
       <property name="text">
@@ -137,17 +130,38 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
-     <widget class="QCheckBox" name="cb_CVI">
+    <item row="1" column="2">
+     <widget class="QCheckBox" name="cb_NDVI">
       <property name="text">
-       <string>CVI</string>
+       <string>NDVI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QCheckBox" name="cb_NDSI">
+      <property name="text">
+       <string>NDSI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QCheckBox" name="cb_SIPI">
+      <property name="text">
+       <string>SIPI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QCheckBox" name="cb_ARVI">
+      <property name="text">
+       <string>ARVI</string>
       </property>
      </widget>
     </item>
     <item row="0" column="3">
-     <widget class="QCheckBox" name="cb_DVI">
+     <widget class="QCheckBox" name="cb_GCI">
       <property name="text">
-       <string>DVI</string>
+       <string>GCI</string>
       </property>
      </widget>
     </item>
@@ -165,28 +179,14 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QCheckBox" name="cb_NDSI">
+    <item row="0" column="2">
+     <widget class="QCheckBox" name="cb_CVI">
       <property name="text">
-       <string>NDSI</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QCheckBox" name="cb_NDVI">
-      <property name="text">
-       <string>NDVI</string>
+       <string>CVI</string>
       </property>
      </widget>
     </item>
     <item row="1" column="3">
-     <widget class="QCheckBox" name="cb_RVI">
-      <property name="text">
-       <string>RVI</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="4">
      <widget class="QCheckBox" name="cb_SAVI">
       <property name="text">
        <string>SAVI</string>
@@ -198,8 +198,8 @@
   <widget class="QComboBox" name="cmb_vnir">
    <property name="geometry">
     <rect>
-     <x>129</x>
-     <y>209</y>
+     <x>109</x>
+     <y>189</y>
      <width>73</width>
      <height>21</height>
     </rect>
@@ -208,8 +208,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>263</x>
-     <y>121</y>
+     <x>243</x>
+     <y>101</y>
      <width>190</width>
      <height>111</height>
     </rect>
@@ -260,8 +260,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>209</y>
+     <x>40</x>
+     <y>189</y>
      <width>56</width>
      <height>16</height>
     </rect>
@@ -273,8 +273,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>122</y>
+     <x>40</x>
+     <y>102</y>
      <width>52</width>
      <height>16</height>
     </rect>
@@ -286,8 +286,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>151</y>
+     <x>40</x>
+     <y>131</y>
      <width>62</width>
      <height>16</height>
     </rect>
@@ -299,8 +299,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>180</y>
+     <x>40</x>
+     <y>160</y>
      <width>50</width>
      <height>16</height>
     </rect>
@@ -312,10 +312,10 @@
   <widget class="QTextBrowser" name="textBrowser">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>470</x>
      <y>20</y>
-     <width>351</width>
-     <height>331</height>
+     <width>381</width>
+     <height>341</height>
     </rect>
    </property>
    <property name="html">
@@ -330,8 +330,8 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;(1 / VNIR - 1 / Green) / NIR &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;cvi&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;NIR * (Red / Green ^ 2) &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;dvi&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;B9 / VNIR &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;GCI&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;NIR / Green - 1&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;gemi&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;n * (1.0 - 0.25n) - ((Red - 0.05) / (1.0 - Red)) &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:7pt; font-style:italic; color:#00aaff;&quot;&gt;n=((2.0 * (NIR ^ 2.0) - Red ^ 2.0) + 1.5 * NIR + 0.5 * Red) / (NIR + Red + 0.5)&lt;/span&gt;&lt;/p&gt;
@@ -341,10 +341,23 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;(B11 - B12) / (B11 + B12) &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;ndvi&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;(NIR - Red) / (NIR + Red) &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;rvi&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;NIR / Red &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;savi&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;(NIR - Red) / (NIR + Red + 0,5) * (1 + 0,5)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;(NIR - Red) / (NIR + Red + 0,5) * (1 + 0,5)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600; text-transform:uppercase;&quot;&gt;SIPI&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#209612;&quot;&gt;(NIR - Blue) / (NIR - Red) &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cb_load">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>280</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load output</string>
    </property>
   </widget>
  </widget>
