@@ -529,7 +529,7 @@ class IndexCalculator:
         ras2.raster = lyr2
         ras2.bandNumber = 1
         entries.append( ras2 )
-        calc = QgsRasterCalculator( '"nir" / "gteen" - 1', \
+        calc = QgsRasterCalculator( '"nir" / "green" - 1', \
         output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
         calc.processCalculation()
         self.iface.messageBar().pushMessage("GCI Output Created Successfully", level=Qgis.Success, duration=3)
