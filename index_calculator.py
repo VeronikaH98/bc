@@ -394,10 +394,10 @@ class IndexCalculator:
             self.calc_gci()
             if self.dlg.cb_load.isChecked():
                 out = iface.addRasterLayer(os.path.join(self.dlg.le_output.text(),"gci.tif"))
-        if self.dlg.cb_GEMI.isChecked():
-            self.calc_gemi()
+        if self.dlg.cb_NBRI.isChecked():
+            self.calc_nbri()
             if self.dlg.cb_load.isChecked():
-                out = iface.addRasterLayer(os.path.join(self.dlg.le_output.text(),"gemi.tif"))
+                out = iface.addRasterLayer(os.path.join(self.dlg.le_output.text(),"nbri.tif"))
         if self.dlg.cb_GVMI.isChecked():
             self.calc_gvmi()
             if self.dlg.cb_load.isChecked():
@@ -475,7 +475,7 @@ class IndexCalculator:
         ras3.raster = lyr3
         ras3.bandNumber = 1
         entries.append( ras3 )
-        calc = QgsRasterCalculator( '(1.0 / "vnir" - 1.0 / "green") / "nir"', \
+        calc = QgsRasterCalculator( '(1.0 / "green" - 1.0 / "vnir") / "nir"', \
         output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
         calc.processCalculation()
         self.iface.messageBar().pushMessage("BRI Output Created Successfully", level=Qgis.Success, duration=3)
@@ -557,15 +557,15 @@ class IndexCalculator:
         calc.processCalculation()
         self.iface.messageBar().pushMessage("GVMI Output Created Successfully", level=Qgis.Success, duration=3)  
 
-    def calc_gemi(self):
-        lyr1 = self.getRed()
+    def calc_nbri(self):
+        lyr1 = self.getB12()
         lyr2 = self.getNir()
-        output = os.path.join(self.dlg.le_output.text(),"gemi.tif")
+        output = os.path.join(self.dlg.le_output.text(),"nbri.tif")
 
         entries = []
         #red band
         ras1 = QgsRasterCalculatorEntry()
-        ras1.ref = 'red'
+        ras1.ref = 'b12'
         ras1.raster = lyr1
         ras1.bandNumber = 1
         entries.append(ras1)
@@ -575,14 +575,14 @@ class IndexCalculator:
         ras2.raster = lyr2
         ras2.bandNumber = 1
         entries.append( ras2 )
-        calc = QgsRasterCalculator( '((2.0 * ("nir" ^ 2.0) - "red" ^ 2.0) + 1.5 * "nir" + 0.5 * "red") / ("nir" + "red" + 0.5) * (1.0 - 0.25 * (2.0 * ("nir" ^ 2.0) - "red" ^ 2.0) + 1.5 * "nir" + 0.5 * "red") / ("nir" + "red" + 0.5) - (("red" - 0.125) / (1.0 - "red"))', \
+        calc = QgsRasterCalculator( '("nir" -  "b12") / ("nir" + "b12")', \
         output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
         calc.processCalculation()
-        self.iface.messageBar().pushMessage("GEMI Output Created Successfully", level=Qgis.Success, duration=3)
+        self.iface.messageBar().pushMessage("NBRI Output Created Successfully", level=Qgis.Success, duration=3)
 
     def calc_ndsi(self):
         lyr1 = self.getB11()
-        lyr2 = self.getB12()
+        lyr2 = self.getGreen()
         output = os.path.join(self.dlg.le_output.text(),"ndsi.tif")
 
         entries = []
@@ -594,11 +594,11 @@ class IndexCalculator:
         entries.append(ras1)
         #b12 band#
         ras2 = QgsRasterCalculatorEntry()
-        ras2.ref = 'b12'
+        ras2.ref = 'green'
         ras2.raster = lyr2
         ras2.bandNumber = 1
         entries.append( ras2 )
-        calc = QgsRasterCalculator( '("b11" -  "b12") / ("b11" + "b12")', \
+        calc = QgsRasterCalculator( '( "green" - "b11" ) / ( "green" + "b11" )', \
         output, 'GTiff', lyr1.extent(), lyr1.width(), lyr1.height(), entries )
         calc.processCalculation() 
         self.iface.messageBar().pushMessage("NDSI Output Created Successfully", level=Qgis.Success, duration=3)
