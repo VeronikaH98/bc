@@ -12,8 +12,8 @@ email=hajduchova18@uniba.sk
 
 about=This plugin calculates different indexes from Sentinel 2 snapshots.
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/VeronikaH98/bc/issues
+repository=https://github.com/VeronikaH98/bc
 # End of mandatory metadata
 
 # Recommended items:
@@ -23,9 +23,9 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python, index, ndvi
 
-homepage=http://homepage
+homepage=https://github.com/VeronikaH98/bc
 category=Plugins
 icon=icon.png
 # experimental flag
